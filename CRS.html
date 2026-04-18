@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Course Registration System</title>
+<style>
+:root{
+  --bg:#f7f8fc;--surface:#ffffff;--surface2:#f0f3f9;
+  --border:#e2e6f0;--border2:#c8cfe8;
+  --text:#1a1d2e;--text2:#4a5278;--text3:#9aa0c0;
+  --accent:#3b4fd4;--accent2:#6c3fc7;
+  --accent-bg:#eef0fd;--accent-border:#c0c8f5;
+  --success:#0a6640;--success-bg:#e6f7ee;--success-border:#7ed4a8;
+  --danger:#c0182a;--danger-bg:#fdf0f1;--danger-border:#f0a8ae;
+  --warning:#7a4500;--warning-bg:#fef7e6;
+  --teal:#0a7c6e;--teal-bg:#e6f7f5;
+  --pink:#a0185c;--pink-bg:#fcedf5;
+  --radius:10px;--radius-sm:6px;
+  --shadow:0 1px 4px rgba(59,79,212,.07),0 2px 10px rgba(59,79,212,.05);
+  --shadow-card:0 1px 3px rgba(59,79,212,.06),0 2px 8px rgba(59,79,212,.04);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Calibri','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15.5px;line-height:1.6}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+header{background:#fff;border-bottom:1.5px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:20;box-shadow:0 1px 8px rgba(59,79,212,.07)}
+.logo{font-size:17px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:10px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.logo span{font-weight:400;color:var(--text3);font-size:14px}
+.header-right{display:flex;align-items:center;gap:8px}
+.hbtn{font-size:13px;padding:6px 14px;border:1.5px solid var(--border2);background:#fff;color:var(--text2);border-radius:20px;cursor:pointer;font-family:inherit;transition:all .18s;font-weight:600}
+.hbtn:hover{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent)}
+
+main{max-width:1000px;margin:0 auto;padding:28px 24px;animation:fadeUp .35s ease both}
+
+.tabs{display:flex;gap:3px;margin-bottom:26px;background:#fff;border-radius:var(--radius);padding:4px;border:1.5px solid var(--border);box-shadow:var(--shadow-card)}
+.tab{flex:1;padding:9px 10px;border:none;background:transparent;font-size:14px;font-family:inherit;color:var(--text2);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-align:center;font-weight:600}
+.tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 2px 8px rgba(59,79,212,.22)}
+.tab:hover:not(.active){background:var(--surface2);color:var(--text)}
+
+.card{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:16px;box-shadow:var(--shadow-card);animation:fadeUp .3s ease both}
+.card-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--text);display:flex;align-items:center;gap:9px}
+.ct-bar{width:3px;height:18px;border-radius:2px;background:linear-gradient(180deg,var(--accent),var(--accent2));flex-shrink:0;display:inline-block}
+
+.field{margin-bottom:13px}
+label{display:block;font-size:12px;font-weight:700;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.7px}
+input[type=text],input[type=number],select,textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:#fff;color:var(--text);font-size:15px;font-family:inherit;transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,79,212,.1)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.field-row{grid-template-columns:1fr}}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 20px;border-radius:20px;font-size:14px;font-family:inherit;font-weight:700;cursor:pointer;border:none;transition:all .18s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 2px 8px rgba(59,79,212,.25)}
+.btn-primary:hover{box-shadow:0 4px 14px rgba(59,79,212,.35);transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--text2);border:1.5px solid var(--border2)}
+.btn-ghost:hover{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+.btn-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12.5px}
+.btn-xs{padding:3px 9px;font-size:11.5px;border-radius:12px}
+
+.alert{padding:10px 14px;border-radius:var(--radius-sm);font-size:14px;margin-bottom:14px;border:1.5px solid;animation:slideDown .22s ease both}
+.alert-success{background:var(--success-bg);color:var(--success);border-color:var(--success-border)}
+.alert-danger{background:var(--danger-bg);color:var(--danger);border-color:var(--danger-border)}
+.alert-warning{background:var(--warning-bg);color:var(--warning);border-color:#f5c842}
+.alert-info{background:var(--accent-bg);color:var(--accent);border-color:var(--accent-border)}
+
+.badge{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:20px;font-weight:700}
+.badge-blue{background:var(--accent-bg);color:var(--accent)}
+.badge-teal{background:var(--teal-bg);color:var(--teal)}
+.badge-pink{background:var(--pink-bg);color:var(--pink)}
+.badge-gray{background:var(--surface2);color:var(--text2)}
+.badge-green{background:var(--success-bg);color:var(--success)}
+.badge-red{background:var(--danger-bg);color:var(--danger)}
+
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.page-sub{font-size:14px;color:var(--text2);margin-bottom:22px}
+
+.student-card{display:flex;align-items:flex-start;gap:14px;padding:15px 18px;border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:10px;background:#fff;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .18s;box-shadow:var(--shadow-card)}
+.student-card:hover{border-color:var(--accent-border);box-shadow:0 3px 14px rgba(59,79,212,.1);transform:translateY(-1px)}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.student-name{font-size:15px;font-weight:700}
+.student-meta{font-size:13px;color:var(--text2);margin-top:2px}
+
+.course-row{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid var(--border);transition:background .15s;border-radius:4px}
+.course-row:last-child{border-bottom:none}
+.course-row:hover{background:var(--surface2)}
+.course-code{font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-bg);padding:2px 7px;border-radius:4px;white-space:nowrap}
+.course-name-t{font-size:14px;font-weight:600;flex:1}
+.credit-badge{font-size:12px;padding:3px 9px;border-radius:20px;background:var(--teal-bg);color:var(--teal);font-weight:700;white-space:nowrap}
+
+.sem-block{border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:box-shadow .2s}
+.sem-block:hover{box-shadow:0 2px 10px rgba(59,79,212,.08)}
+.sem-header{padding:10px 16px;background:linear-gradient(90deg,var(--accent-bg),var(--surface2));font-size:14px;font-weight:700;color:var(--accent);display:flex;justify-content:space-between;align-items:center}
+.sem-body{padding:2px 16px 8px}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:24px}
+.stat{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-card);transition:transform .18s,box-shadow .18s;animation:fadeUp .35s ease both}
+.stat:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(59,79,212,.1)}
+.stat-val{font-size:26px;font-weight:700;color:var(--accent)}
+.stat-label{font-size:12px;color:var(--text2);margin-top:2px;font-weight:600}
+
+.search-wrap{position:relative;margin-bottom:14px}
+.search-wrap input{padding-left:34px}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
+
+#toast{position:fixed;bottom:22px;right:22px;padding:11px 20px;border-radius:20px;font-size:14px;font-weight:700;z-index:999;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;transform:translateY(8px)}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.toast-success{background:linear-gradient(135deg,#059669,#0d9488);color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.28)}
+#toast.toast-danger{background:linear-gradient(135deg,#dc2626,#be185d);color:#fff;box-shadow:0 4px 14px rgba(220,38,38,.28)}
+#toast.toast-info{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 14px rgba(59,79,212,.28)}
+
+/* course picker */
+.course-picker{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:14px}
+.cp-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none}
+.cp-row:last-child{border-bottom:none}
+.cp-row:hover{background:var(--accent-bg)}
+.cp-row.selected{background:var(--accent-bg);border-left:3px solid var(--accent);padding-left:11px}
+.cp-check{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;pointer-events:none}
+.cp-code{font-size:12px;font-weight:700;color:var(--accent);min-width:90px}
+.cp-title{font-size:14px;flex:1}
+.cp-cr{font-size:12px;color:var(--text3);font-weight:700;white-space:nowrap}
+
+/* section selector */
+.section-row{display:flex;align-items:center;gap:12px;padding:9px 12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:7px;flex-wrap:wrap}
+.section-course-name{flex:1;font-size:14px;font-weight:600;min-width:180px}
+.section-select{padding:6px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-family:inherit;font-size:14px;background:#fff;color:var(--text)}
+
+/* course manager */
+.dept-card{border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-card)}
+.dept-header{padding:12px 18px;background:linear-gradient(90deg,var(--accent-bg),#fff);font-size:14.5px;font-weight:700;color:var(--accent);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background .15s}
+.dept-header:hover{background:linear-gradient(90deg,#dde2fc,var(--accent-bg))}
+.dept-body{padding:0 18px 14px;display:none}
+.dept-body.open{display:block;animation:slideDown .2s ease both}
+.sem-group{margin-bottom:14px}
+.sem-group-title{font-size:13px;font-weight:700;color:#fff;background:linear-gradient(90deg,var(--accent),var(--accent2));padding:5px 12px;border-radius:var(--radius-sm);margin-bottom:8px;margin-top:12px;display:inline-block}
+.cer{display:grid;grid-template-columns:120px 1fr 64px auto;gap:8px;align-items:center;margin-bottom:6px}
+@media(max-width:600px){.cer{grid-template-columns:1fr 1fr}}
+.cer input{padding:6px 10px;font-size:13.5px}
+
+.divider{height:1px;background:var(--border);margin:16px 0}
+.empty{text-align:center;padding:36px 20px;color:var(--text3);font-size:15px}
+.next-sem-badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:20px;margin-left:8px;background:var(--success-bg);color:var(--success);vertical-align:middle}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    Course Registration System
+    <span>— Student Portal</span>
+  </div>
+  <div class="header-right">
+    <button class="hbtn" onclick="exportData()">Export</button>
+    <button class="hbtn" onclick="document.getElementById('importFile').click()">Import</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"/>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('register')">Registration</button>
+    <button class="tab" onclick="showTab('records')">Student Records</button>
+    <button class="tab" onclick="showTab('overview')">Overview</button>
+    <button class="tab" onclick="showTab('courses')">Course Manager</button>
+  </div>
+
+  <!-- REGISTRATION -->
+  <div id="tab-register">
+    <div class="page-title">New Registration</div>
+    <div class="page-sub">Look up a student by ID, then enroll them in their next semester with suggested courses.</div>
+
+    <div class="card" id="step1-card">
+      <div class="card-title"><span class="ct-bar"></span>Step 1 — Student Identity</div>
+      <div id="student-found-info"></div>
+      <div class="field">
+        <label>Student ID</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="reg-id" placeholder="e.g. 221-15-4826" style="flex:1"/>
+          <button class="btn btn-ghost" onclick="lookupStudent()">Lookup</button>
+        </div>
+      </div>
+      <div id="new-student-fields" style="display:none">
+        <div class="field-row">
+          <div class="field"><label>Full Name</label><input type="text" id="reg-name" placeholder="Student full name"/></div>
+          <div class="field">
+            <label>Department</label>
+            <select id="reg-dept">
+              <option value="">Select department…</option>
+              <option value="CSE">CSE — Computer Science & Engineering</option>
+              <option value="NFE">NFE — Nutrition & Food Engineering</option>
+              <option value="SWE">SWE — Software Engineering</option>
+              <option value="BBA">BBA — Business Administration</option>
+              <option value="LAW">LAW — Law (LLB)</option>
+              <option value="AGR">AGR — Agriculture</option>
+              <option value="CIV">CIV — Civil Engineering</option>
+              <option value="TEX">TEX — Textile Engineering</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="proceedToSemester()">Continue →</button>
+    </div>
+
+    <div class="card" id="step2-card" style="display:none">
+      <div class="card-title"><span class="ct-bar"></span>Step 2 — Semester Term</div>
+      <div id="sem-suggestion"></div>
+      <div class="field">
+        <label>Academic Term</label>
+        <select id="sem-name">
+          <option value="">Select term…</option>
+          <option>Spring26</option><option>Fall26</option>
+          <option>Spring27</option><option>Fall27</option>
+          <option>Spring28</option><option>Fall28</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="resetToStep1()">← Back</button>
+        <button class="btn btn-primary" onclick="proceedToCourses()">Load Courses →</button>
+      </div>
+    </div>
+
+    <div class="card" id="step3-card" style="display:none">
+      <div class="card-title"><span class="ct-bar"></span>Step 3 — Choose Courses</div>
+      <div id="step3-info" data-sem-num="1"></div>
+      <div id="course-picker-container"></div>
+      <div style="display:flex;gap:8px;margin-top:6px" id="step3-btns1">
+        <button class="btn btn-ghost" onclick="backToSemester()">← Back</button>
+        <button class="btn btn-primary" onclick="confirmCourses()">Confirm &amp; Choose Sections →</button>
+      </div>
+
+      <div id="section-picker-container" style="display:none">
+        <div class="divider"></div>
+        <div class="card-title" style="font-size:15px;margin-bottom:10px"><span class="ct-bar"></span>Choose Sections</div>
+        <div id="section-rows"></div>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <button class="btn btn-ghost" onclick="backToCourses()">← Change Courses</button>
+          <button class="btn btn-primary" onclick="submitRegistration()">✓ Register Semester</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECORDS -->
+  <div id="tab-records" style="display:none">
+    <div class="page-title">Student Records</div>
+    <div class="page-sub">Search and view all registered students.</div>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="Search by name, ID, or department…" oninput="renderRecords(this.value)"/>
+    </div>
+    <div id="records-list"></div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="tab-overview" style="display:none">
+    <div class="page-title">System Overview</div>
+    <div class="page-sub">Summary of all registrations in the system.</div>
+    <div class="stats" id="stats-grid"></div>
+    <div id="overview-content"></div>
+  </div>
+
+  <!-- COURSE MANAGER -->
+  <div id="tab-courses" style="display:none">
+    <div class="page-title">Course Manager</div>
+    <div class="page-sub">Edit, add, or remove courses for any department and semester. Changes apply immediately to new registrations.</div>
+    <div id="dept-list"></div>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+const DEFAULT_COURSES = {
+  NFE:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'NFE-101',name:'Introduction to Nutrition & Food Engineering',cr:3},
+      {code:'CHEM-101',name:'General Chemistry',cr:3},
+      {code:'BIO-101',name:'Biology for Engineers',cr:3},
+      {code:'MAT-101',name:'Mathematics I',cr:3},
+      {code:'ENG-101',name:'English',cr:3},
+      {code:'NFE-102',name:'Food Science Lab Basics',cr:1},
+      {code:'PHY-101',name:'Physics',cr:2},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'NFE-103',name:'Human Nutrition',cr:3},
+      {code:'CHEM-102',name:'Organic Chemistry',cr:3},
+      {code:'BIO-102',name:'Microbiology',cr:3},
+      {code:'MAT-102',name:'Calculus',cr:3},
+      {code:'STAT-101',name:'Statistics',cr:3},
+      {code:'NFE-104',name:'Food Chemistry Lab',cr:1},
+      {code:'ENG-102',name:'Technical Writing',cr:2},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'NFE-201',name:'Food Microbiology',cr:3},
+      {code:'NFE-202',name:'Nutritional Biochemistry',cr:3},
+      {code:'NFE-203',name:'Food Processing Technology',cr:3},
+      {code:'CHEM-201',name:'Analytical Chemistry',cr:3},
+      {code:'NFE-204',name:'Microbiology Lab',cr:1},
+      {code:'NFE-205',name:'Food Engineering Fundamentals',cr:3},
+      {code:'SOC-101',name:'Sociology / Nutrition & Society',cr:2},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'NFE-301',name:'Dietetics & Clinical Nutrition',cr:3},
+      {code:'NFE-302',name:'Food Quality Control',cr:3},
+      {code:'NFE-303',name:'Food Preservation Techniques',cr:3},
+      {code:'NFE-304',name:'Biochemistry Lab',cr:1},
+      {code:'NFE-305',name:'Food Analysis Lab',cr:1},
+      {code:'MAT-201',name:'Biostatistics',cr:3},
+      {code:'BUS-101',name:'Basic Management',cr:3},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'NFE-401',name:'Community Nutrition',cr:3},
+      {code:'NFE-402',name:'Food Packaging Technology',cr:3},
+      {code:'NFE-403',name:'Food Safety & Hygiene',cr:3},
+      {code:'NFE-404',name:'Industrial Food Processing',cr:3},
+      {code:'NFE-405',name:'Food Lab Techniques',cr:1},
+      {code:'NFE-406',name:'Research Methodology',cr:3},
+      {code:'ENG-201',name:'Report Writing',cr:2},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'NFE-501',name:'Clinical Diet Planning',cr:3},
+      {code:'NFE-502',name:'Functional Foods',cr:3},
+      {code:'NFE-503',name:'Food Engineering Operations',cr:3},
+      {code:'NFE-504',name:'Quality Assurance Lab',cr:1},
+      {code:'NFE-505',name:'Nutrition Assessment Lab',cr:1},
+      {code:'NFE-506',name:'Food Biotechnology',cr:3},
+      {code:'ELEC-101',name:'Elective Course',cr:4},
+    ]},
+    {sem:7,label:'Semester 7',courses:[
+      {code:'NFE-601',name:'Advanced Nutrition Science',cr:3},
+      {code:'NFE-602',name:'Food Product Development',cr:3},
+      {code:'NFE-603',name:'Food Industry Management',cr:3},
+      {code:'NFE-604',name:'Internship / Industrial Training',cr:3},
+      {code:'NFE-605',name:'Research Project Phase I',cr:3},
+      {code:'ELEC-201',name:'Elective',cr:3},
+    ]},
+    {sem:8,label:'Semester 8',courses:[
+      {code:'NFE-701',name:'Thesis / Capstone Project',cr:6},
+      {code:'NFE-702',name:'Advanced Food Technology',cr:3},
+      {code:'NFE-703',name:'Seminar & Presentation',cr:2},
+      {code:'NFE-704',name:'Elective Course',cr:3},
+      {code:'NFE-705',name:'Industry Internship (Final)',cr:3},
+    ]},
+  ],
+  CSE:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'0613-101',name:'Structured Programming Languages',cr:3},
+      {code:'0613-102',name:'Structured Programming Lab',cr:1},
+      {code:'0533-101',name:'Physics',cr:3},
+      {code:'0533-102',name:'Physics Lab',cr:1},
+      {code:'0311-101',name:'Engineering Economics',cr:3},
+      {code:'0231-101',name:'Communicative English',cr:3},
+      {code:'0211-102',name:'Engineering Drawing Lab',cr:1},
+      {code:'0541-101',name:'Linear Algebra & Coordinate Geometry',cr:3},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'0613-103',name:'Data Structures',cr:3},
+      {code:'0613-104',name:'Data Structures Lab',cr:1},
+      {code:'0613-105',name:'Discrete Mathematics',cr:3},
+      {code:'0713-101',name:'Electrical Circuits',cr:3},
+      {code:'0222-101',name:'Bangladesh Studies',cr:3},
+      {code:'0413-102',name:'Financial & Managerial Accounting',cr:3},
+      {code:'0541-102',name:'Differential & Integral Calculus',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'0613-201',name:'OOP (Object-Oriented Programming)',cr:3},
+      {code:'0613-202',name:'OOP Lab',cr:1},
+      {code:'0613-203',name:'Computer Architecture',cr:3},
+      {code:'0713-201',name:'Electronic Devices & Circuit',cr:3},
+      {code:'0713-202',name:'Electronics Lab',cr:1},
+      {code:'0531-201',name:'Chemistry',cr:3},
+      {code:'0223-201',name:'Ethics & Environmental Protection',cr:3},
+      {code:'0541-201',name:'Differential Equations & Vector Analysis',cr:3},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'0613-205',name:'Algorithms',cr:3},
+      {code:'0613-206',name:'Algorithms Lab',cr:1},
+      {code:'0613-207',name:'Microprocessor & Assembly',cr:3},
+      {code:'0613-208',name:'Microprocessor Lab',cr:1},
+      {code:'0613-209',name:'Compiler Design',cr:3},
+      {code:'0713-203',name:'Digital Logic Design',cr:3},
+      {code:'0713-204',name:'DLD Lab',cr:1},
+      {code:'0413-202',name:'Business Strategy',cr:1.5},
+      {code:'0542-202',name:'Statistics & Probability',cr:3},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'0613-301',name:'Operating System',cr:3},
+      {code:'0613-302',name:'OS Lab',cr:1},
+      {code:'0612-302',name:'Data Communication',cr:3},
+      {code:'0613-303',name:'Software Engineering',cr:1.5},
+      {code:'0612-303',name:'Database Management System',cr:3},
+      {code:'0612-304',name:'DBMS Lab',cr:1},
+      {code:'0612-301',name:'Information System Management',cr:1.5},
+      {code:'0541-301',name:'Complex Variables',cr:3},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'0612-305',name:'Computer Networking',cr:3},
+      {code:'0612-306',name:'Networking Lab',cr:1},
+      {code:'0613-305',name:'Markup & Scripting Languages',cr:3},
+      {code:'0613-306',name:'Web Lab',cr:1},
+      {code:'0613-307',name:'Software Dev Management',cr:1.5},
+      {code:'0613-308',name:'SDM Lab',cr:0.5},
+      {code:'0613-309',name:'Cyber Security',cr:3},
+      {code:'0613-310',name:'System Config Lab',cr:1},
+      {code:'0232-302',name:'Technical Writing',cr:1},
+      {code:'0541-302',name:'Numerical Analysis',cr:1.5},
+    ]},
+    {sem:7,label:'Semester 7',courses:[
+      {code:'0613-401',name:'Artificial Intelligence',cr:3},
+      {code:'0613-402',name:'AI Lab',cr:1},
+      {code:'0613-403',name:'Computer Graphics',cr:3},
+      {code:'0613-404',name:'Graphics Lab',cr:1},
+      {code:'0613-405',name:'Software Testing',cr:1.5},
+      {code:'0613-406',name:'Testing Lab',cr:0.5},
+      {code:'0613-409',name:'Mobile App Development',cr:3},
+      {code:'0613-410',name:'Mobile Lab',cr:1},
+      {code:'0613-412',name:'Software Integration',cr:3},
+      {code:'0688-400',name:'Capstone Project',cr:3},
+    ]},
+    {sem:8,label:'Semester 8',courses:[
+      {code:'ELEC-A',name:'Elective Course A',cr:3},
+      {code:'ELEC-B',name:'Elective Course B',cr:3},
+      {code:'ELEC-C',name:'Elective Course C',cr:3},
+      {code:'ELEC-D',name:'Elective Course D',cr:3},
+      {code:'0413-401',name:'Entrepreneurship',cr:3},
+      {code:'0688-401',name:'Capstone Project (continuation)',cr:3},
+    ]},
+  ],
+  SWE:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'SWE-101',name:'Intro to Software Engineering',cr:3},
+      {code:'CSE-101',name:'Structured Programming',cr:3},
+      {code:'MAT-101',name:'Mathematics I',cr:3},
+      {code:'ENG-101',name:'English',cr:3},
+      {code:'PHY-101',name:'Physics',cr:3},
+      {code:'PHY-102',name:'Physics Lab',cr:1},
+      {code:'CSE-102',name:'Programming Lab',cr:2},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'SWE-103',name:'Data Structures',cr:3},
+      {code:'SWE-104',name:'Data Structures Lab',cr:1},
+      {code:'MAT-102',name:'Calculus',cr:3},
+      {code:'CSE-103',name:'Discrete Math',cr:3},
+      {code:'BUS-101',name:'Accounting',cr:3},
+      {code:'BDS-101',name:'Bangladesh Studies',cr:3},
+      {code:'ENG-102',name:'Technical Writing',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'SWE-201',name:'OOP',cr:3},{code:'SWE-202',name:'OOP Lab',cr:1},
+      {code:'SWE-203',name:'DBMS',cr:3},{code:'SWE-204',name:'DBMS Lab',cr:1},
+      {code:'MAT-201',name:'Statistics',cr:3},
+      {code:'SWE-205',name:'Computer Architecture',cr:3},
+      {code:'ENG-201',name:'Communication Skills',cr:3},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'SWE-301',name:'Operating Systems',cr:3},{code:'SWE-302',name:'OS Lab',cr:1},
+      {code:'SWE-303',name:'Algorithms',cr:3},{code:'SWE-304',name:'Algorithms Lab',cr:1},
+      {code:'SWE-305',name:'Software Requirements',cr:3},
+      {code:'SWE-306',name:'Networking Fundamentals',cr:3},
+      {code:'MAT-301',name:'Numerical Methods',cr:3},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'SWE-401',name:'Software Design & Architecture',cr:3},
+      {code:'SWE-402',name:'Web Engineering',cr:3},{code:'SWE-403',name:'Web Lab',cr:1},
+      {code:'SWE-404',name:'AI Fundamentals',cr:3},
+      {code:'SWE-405',name:'Software Testing',cr:3},{code:'SWE-406',name:'Testing Lab',cr:1},
+      {code:'BUS-301',name:'Project Management',cr:3},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'SWE-501',name:'Mobile App Dev',cr:3},{code:'SWE-502',name:'Mobile Lab',cr:1},
+      {code:'SWE-503',name:'Cloud Computing',cr:3},
+      {code:'SWE-504',name:'DevOps & CI/CD',cr:3},
+      {code:'SWE-505',name:'Cyber Security',cr:3},
+      {code:'ELEC-101',name:'Elective I',cr:3},
+    ]},
+    {sem:7,label:'Semester 7',courses:[
+      {code:'SWE-601',name:'Software Entrepreneurship',cr:3},
+      {code:'SWE-602',name:'Capstone Project Phase I',cr:3},
+      {code:'SWE-603',name:'Research Methodology',cr:3},
+      {code:'ELEC-201',name:'Elective II',cr:3},
+      {code:'ELEC-202',name:'Elective III',cr:3},
+    ]},
+    {sem:8,label:'Semester 8',courses:[
+      {code:'SWE-701',name:'Capstone Project Phase II',cr:6},
+      {code:'SWE-702',name:'Industrial Internship',cr:3},
+      {code:'SWE-703',name:'Seminar',cr:2},
+      {code:'ELEC-301',name:'Elective IV',cr:3},
+    ]},
+  ],
+  BBA:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'BUS-101',name:'Principles of Management',cr:3},
+      {code:'ECO-101',name:'Microeconomics',cr:3},
+      {code:'ENG-101',name:'Business English',cr:3},
+      {code:'ACC-101',name:'Financial Accounting',cr:3},
+      {code:'MAT-101',name:'Business Mathematics',cr:3},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'ECO-102',name:'Macroeconomics',cr:3},
+      {code:'BUS-102',name:'Marketing Principles',cr:3},
+      {code:'STAT-101',name:'Business Statistics',cr:3},
+      {code:'ACC-102',name:'Cost Accounting',cr:3},
+      {code:'MIS-101',name:'Introduction to MIS',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'FIN-201',name:'Financial Management',cr:3},
+      {code:'HRM-201',name:'Human Resource Management',cr:3},
+      {code:'MKT-201',name:'Consumer Behaviour',cr:3},
+      {code:'LAW-201',name:'Business Law',cr:3},
+      {code:'BUS-201',name:'Organizational Behaviour',cr:3},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'FIN-301',name:'Investment & Banking',cr:3},
+      {code:'TAX-301',name:'Taxation',cr:3},
+      {code:'MKT-301',name:'Advertising & Promotion',cr:3},
+      {code:'BUS-301',name:'Operations Management',cr:3},
+      {code:'MIS-301',name:'E-Commerce',cr:3},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'FIN-401',name:'Corporate Finance',cr:3},
+      {code:'HRM-401',name:'Industrial Relations',cr:3},
+      {code:'MKT-401',name:'International Marketing',cr:3},
+      {code:'STR-401',name:'Strategic Management',cr:3},
+      {code:'ELEC-101',name:'Elective I',cr:3},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'BUS-501',name:'Business Ethics',cr:3},
+      {code:'ENT-501',name:'Entrepreneurship',cr:3},
+      {code:'ELEC-201',name:'Elective II',cr:3},
+      {code:'ELEC-202',name:'Elective III',cr:3},
+      {code:'INT-501',name:'Internship',cr:3},
+    ]},
+    {sem:7,label:'Semester 7',courses:[
+      {code:'RES-601',name:'Research Methodology',cr:3},
+      {code:'ELEC-301',name:'Elective IV',cr:3},
+      {code:'ELEC-302',name:'Elective V',cr:3},
+      {code:'CAP-601',name:'Capstone Project Phase I',cr:3},
+    ]},
+    {sem:8,label:'Semester 8',courses:[
+      {code:'THE-701',name:'Thesis / Capstone Project',cr:6},
+      {code:'ELEC-401',name:'Elective VI',cr:3},
+      {code:'SEM-701',name:'Seminar',cr:2},
+    ]},
+  ],
+  LAW:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'LAW-101',name:'Legal System',cr:3},
+      {code:'LAW-102',name:'Constitutional Law',cr:3},
+      {code:'LAW-103',name:'Law of Contract',cr:3},
+      {code:'ENG-101',name:'Legal English',cr:3},
+      {code:'SOC-101',name:'Sociology',cr:3},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'LAW-201',name:'Criminal Law',cr:3},
+      {code:'LAW-202',name:'Property Law',cr:3},
+      {code:'LAW-203',name:'Law of Tort',cr:3},
+      {code:'LAW-204',name:'Jurisprudence',cr:3},
+      {code:'LAW-205',name:'Family Law',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'LAW-301',name:'Administrative Law',cr:3},
+      {code:'LAW-302',name:'Commercial Law',cr:3},
+      {code:'LAW-303',name:'Labour Law',cr:3},
+      {code:'LAW-304',name:'Environmental Law',cr:3},
+      {code:'LAW-305',name:'Moot Court I',cr:2},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'LAW-401',name:'International Law',cr:3},
+      {code:'LAW-402',name:'Human Rights Law',cr:3},
+      {code:'LAW-403',name:'Cyber Law',cr:3},
+      {code:'LAW-404',name:'Tax Law',cr:3},
+      {code:'LAW-405',name:'Moot Court II',cr:2},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'LAW-501',name:'Banking & Finance Law',cr:3},
+      {code:'LAW-502',name:'Intellectual Property Law',cr:3},
+      {code:'LAW-503',name:'Alternative Dispute Resolution',cr:3},
+      {code:'LAW-504',name:'Legal Drafting',cr:3},
+      {code:'INT-501',name:'Internship',cr:3},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'LAW-601',name:'Constitutional Litigation',cr:3},
+      {code:'LAW-602',name:'Criminology',cr:3},
+      {code:'LAW-603',name:'Research Methodology',cr:3},
+      {code:'THE-601',name:'Thesis / Research Paper',cr:6},
+    ]},
+  ],
+  AGR:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'AGR-101',name:'Introduction to Agriculture',cr:3},
+      {code:'BIO-101',name:'Biology',cr:3},
+      {code:'CHEM-101',name:'Chemistry',cr:3},
+      {code:'MAT-101',name:'Mathematics',cr:3},
+      {code:'ENG-101',name:'English',cr:3},
+      {code:'AGR-102',name:'Soil Science',cr:3},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'AGR-201',name:'Crop Production',cr:3},
+      {code:'AGR-202',name:'Plant Biology',cr:3},
+      {code:'AGR-203',name:'Agricultural Chemistry',cr:3},
+      {code:'AGR-204',name:'Field Work',cr:2},
+      {code:'STAT-101',name:'Statistics',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'AGR-301',name:'Irrigation Systems',cr:3},
+      {code:'AGR-302',name:'Pest Management',cr:3},
+      {code:'AGR-303',name:'Agro-meteorology',cr:3},
+      {code:'AGR-304',name:'Horticulture',cr:3},
+      {code:'AGR-305',name:'Farm Lab',cr:2},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'AGR-401',name:'Agricultural Economics',cr:3},
+      {code:'AGR-402',name:'Farm Management',cr:3},
+      {code:'AGR-403',name:'Post-Harvest Technology',cr:3},
+      {code:'AGR-404',name:'Animal Husbandry',cr:3},
+      {code:'AGR-405',name:'Field Training I',cr:3},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'AGR-501',name:'Agricultural Biotechnology',cr:3},
+      {code:'AGR-502',name:'Water Resource Management',cr:3},
+      {code:'AGR-503',name:'Organic Farming',cr:3},
+      {code:'AGR-504',name:'Extension Education',cr:3},
+      {code:'AGR-505',name:'Field Training II',cr:3},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'AGR-601',name:'Research Methodology',cr:3},
+      {code:'AGR-602',name:'Food & Nutrition',cr:3},
+      {code:'AGR-603',name:'Agribusiness Management',cr:3},
+      {code:'THE-601',name:'Thesis / Project',cr:6},
+    ]},
+  ],
+  CIV:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'CIV-101',name:'Engineering Drawing',cr:1},
+      {code:'CIV-102',name:'Physics',cr:3},
+      {code:'MAT-101',name:'Engineering Mathematics',cr:3},
+      {code:'ENG-101',name:'English',cr:3},
+      {code:'CIV-103',name:'Civil Engineering Basics',cr:3},
+      {code:'PHY-102',name:'Physics Lab',cr:1},
+      {code:'CIV-104',name:'Drawing Lab',cr:2},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'CIV-201',name:'Mechanics',cr:3},
+      {code:'CIV-202',name:'Surveying',cr:3},
+      {code:'CIV-203',name:'Structural Basics',cr:3},
+      {code:'CIV-204',name:'Fluid Mechanics',cr:3},
+      {code:'MAT-102',name:'Calculus',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'CIV-301',name:'Structural Analysis I',cr:3},
+      {code:'CIV-302',name:'Soil Mechanics',cr:3},
+      {code:'CIV-303',name:'Hydraulics',cr:3},
+      {code:'CIV-304',name:'Construction Materials',cr:3},
+      {code:'CIV-305',name:'Survey Lab',cr:1},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'CIV-401',name:'RCC Design',cr:3},
+      {code:'CIV-402',name:'Transportation Engineering',cr:3},
+      {code:'CIV-403',name:'Geotechnical Engineering',cr:3},
+      {code:'CIV-404',name:'Water Supply & Sanitation',cr:3},
+      {code:'CIV-405',name:'Materials Lab',cr:1},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'CIV-501',name:'Construction Management',cr:3},
+      {code:'CIV-502',name:'Steel Structure Design',cr:3},
+      {code:'CIV-503',name:'Environmental Engineering',cr:3},
+      {code:'CIV-504',name:'Bridge Engineering',cr:3},
+      {code:'CIV-505',name:'Structural Lab',cr:1},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'CIV-601',name:'Earthquake Engineering',cr:3},
+      {code:'CIV-602',name:'Advanced Soil Mechanics',cr:3},
+      {code:'CIV-603',name:'Research Methodology',cr:3},
+      {code:'THE-601',name:'Final Project',cr:6},
+    ]},
+  ],
+  TEX:[
+    {sem:1,label:'Semester 1',courses:[
+      {code:'TEX-101',name:'Introduction to Textile',cr:3},
+      {code:'CHEM-101',name:'Chemistry',cr:3},
+      {code:'PHY-101',name:'Physics',cr:3},
+      {code:'MAT-101',name:'Mathematics',cr:3},
+      {code:'ENG-101',name:'English',cr:3},
+      {code:'TEX-102',name:'Textile Lab Intro',cr:3},
+    ]},
+    {sem:2,label:'Semester 2',courses:[
+      {code:'TEX-201',name:'Yarn Manufacturing',cr:3},
+      {code:'TEX-202',name:'Fabric Manufacturing',cr:3},
+      {code:'CHEM-102',name:'Textile Chemistry',cr:3},
+      {code:'TEX-203',name:'Textile Lab',cr:1},
+      {code:'STAT-101',name:'Statistics',cr:3},
+    ]},
+    {sem:3,label:'Semester 3',courses:[
+      {code:'TEX-301',name:'Dyeing & Printing',cr:3},
+      {code:'TEX-302',name:'Garments Manufacturing',cr:3},
+      {code:'TEX-303',name:'Textile Machinery',cr:3},
+      {code:'TEX-304',name:'Woven Fabric Design',cr:3},
+      {code:'TEX-305',name:'Processing Lab',cr:1},
+    ]},
+    {sem:4,label:'Semester 4',courses:[
+      {code:'TEX-401',name:'Knitting Technology',cr:3},
+      {code:'TEX-402',name:'Nonwoven Technology',cr:3},
+      {code:'TEX-403',name:'Quality Control',cr:3},
+      {code:'TEX-404',name:'Textile Economics',cr:3},
+      {code:'TEX-405',name:'Lab II',cr:1},
+    ]},
+    {sem:5,label:'Semester 5',courses:[
+      {code:'TEX-501',name:'Technical Textiles',cr:3},
+      {code:'TEX-502',name:'Textile Testing',cr:3},
+      {code:'TEX-503',name:'Industrial Training',cr:3},
+      {code:'TEX-504',name:'Eco-Textile',cr:3},
+      {code:'TEX-505',name:'Lab III',cr:1},
+    ]},
+    {sem:6,label:'Semester 6',courses:[
+      {code:'TEX-601',name:'Textile Management',cr:3},
+      {code:'TEX-602',name:'Research Methodology',cr:3},
+      {code:'TEX-603',name:'Industrial Training II',cr:3},
+      {code:'THE-601',name:'Thesis / Capstone',cr:6},
+    ]},
+  ],
+};
+
+const DEPT_NAMES={
+  CSE:'Computer Science & Engineering',NFE:'Nutrition & Food Engineering',
+  SWE:'Software Engineering',BBA:'Business Administration',
+  LAW:'Law (LLB)',AGR:'Agriculture',CIV:'Civil Engineering',TEX:'Textile Engineering'
+};
+const SECTIONS=['A','B','C','D','E'];
+const SECTION_LIMIT=5;
+const STORAGE_KEY='diu_reg_v3';
+
+let db={students:[],courses:JSON.parse(JSON.stringify(DEFAULT_COURSES))};
+let regStudent=null,regSemName='',regSelectedCourses=[];
+
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}
+function load(){
+  try{
+    const d=localStorage.getItem(STORAGE_KEY);
+    if(d){const p=JSON.parse(d);db=p;if(!db.courses)db.courses=JSON.parse(JSON.stringify(DEFAULT_COURSES));}
+  }catch(e){}
+}
+function toast(msg,type='info'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='show toast-'+type;
+  setTimeout(()=>el.className='',2800);
+}
+function showTab(name){
+  ['register','records','overview','courses'].forEach(t=>{
+    const el=document.getElementById('tab-'+t);
+    el.style.display=t===name?'':'none';
+    if(t===name){el.style.animation='none';el.offsetHeight;el.style.animation='fadeUp .3s ease both';}
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('active',['register','records','overview','courses'][i]===name);
+  });
+  if(name==='records')renderRecords('');
+  if(name==='overview')renderOverview();
+  if(name==='courses')renderCourseManager();
+}
+function initials(n){return n.split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';}
+function findStudent(id){return db.students.find(s=>s.id===id);}
+function getNextSemNum(s){return(s.semesters||[]).length+1;}
+
+function countSection(semName,courseName,section){
+  let count=0;
+  db.students.forEach(s=>(s.semesters||[]).forEach(sem=>{
+    if(sem.name===semName)(sem.courses||[]).forEach(c=>{if(c.name===courseName&&c.section===section)count++;});
+  }));
+  return count;
+}
+
+/* ── Registration ── */
+function lookupStudent(){
+  const id=document.getElementById('reg-id').value.trim();
+  if(!id){toast('Please enter a student ID.','danger');return;}
+  const s=findStudent(id);
+  const infoEl=document.getElementById('student-found-info');
+  if(s){
+    regStudent=s;
+    infoEl.innerHTML=`<div class="alert alert-info">Student found: <strong>${s.name}</strong> — ${s.dept}<span class="next-sem-badge">Next: Semester ${getNextSemNum(s)}</span></div>`;
+    document.getElementById('new-student-fields').style.display='none';
+  } else {
+    regStudent=null;
+    infoEl.innerHTML=`<div class="alert alert-warning">New student — please fill in the details below.</div>`;
+    document.getElementById('new-student-fields').style.display='';
+  }
+}
+
+function proceedToSemester(){
+  const id=document.getElementById('reg-id').value.trim();
+  if(!id){toast('Student ID is required.','danger');return;}
+  if(!regStudent){
+    const name=document.getElementById('reg-name').value.trim();
+    const dept=document.getElementById('reg-dept').value;
+    if(!name){toast('Full name is required.','danger');return;}
+    if(!dept){toast('Please select a department.','danger');return;}
+    regStudent={id,name,dept,semesters:[]};
+    db.students.push(regStudent);save();
+  }
+  const nextSem=getNextSemNum(regStudent);
+  document.getElementById('sem-suggestion').innerHTML=`<div class="alert alert-info">
+    <strong>${regStudent.name}</strong> (${regStudent.dept}) — registering for
+    <strong>Semester ${nextSem}</strong> based on academic history.
+  </div>`;
+  document.getElementById('step2-card').style.display='';
+  document.getElementById('step2-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function proceedToCourses(){
+  const sem=document.getElementById('sem-name').value;
+  if(!sem){toast('Please select a semester term.','danger');return;}
+  regSemName=sem;
+  if((regStudent.semesters||[]).find(s=>s.name===sem)){toast('Already registered for '+sem,'danger');return;}
+
+  const nextSemNum=getNextSemNum(regStudent);
+  const dept=regStudent.dept;
+  const deptSems=db.courses[dept]||[];
+  const semData=deptSems.find(s=>s.sem===nextSemNum)||deptSems[nextSemNum-1];
+
+  if(!semData||!semData.courses||!semData.courses.length){
+    toast('No courses found for '+dept+' Semester '+nextSemNum+'. Please add them in Course Manager.','danger');return;
+  }
+
+  const totalCr=semData.courses.reduce((a,c)=>a+c.cr,0);
+  document.getElementById('step3-info').dataset.semNum=nextSemNum;
+  document.getElementById('course-picker-container').innerHTML=`
+    <div class="alert alert-info" style="margin-bottom:10px">
+      <strong>${dept} — ${semData.label}</strong> &nbsp;·&nbsp; ${semData.courses.length} courses &nbsp;·&nbsp; ~${totalCr} total credits
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="btn btn-ghost btn-sm" onclick="selectAllCp()">Select All</button>
+      <button class="btn btn-ghost btn-sm" onclick="deselectAllCp()">Deselect All</button>
+    </div>
+    <div class="course-picker" id="cp-list">
+      ${semData.courses.map((c,i)=>`
+        <div class="cp-row" id="cp-row-${i}" onclick="toggleCp(${i})">
+          <input class="cp-check" type="checkbox" id="cp-cb-${i}" onclick="event.stopPropagation()"/>
+          <span class="cp-code">${c.code}</span>
+          <span class="cp-title">${c.name}</span>
+          <span class="cp-cr">${c.cr} CR</span>
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('section-picker-container').style.display='none';
+  document.getElementById('step3-card').style.display='';
+  document.getElementById('step3-card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function toggleCp(i){
+  const cb=document.getElementById('cp-cb-'+i);
+  const row=document.getElementById('cp-row-'+i);
+  cb.checked=!cb.checked;
+  row.classList.toggle('selected',cb.checked);
+}
+function selectAllCp(){document.querySelectorAll('#cp-list .cp-row').forEach((row,i)=>{document.getElementById('cp-cb-'+i).checked=true;row.classList.add('selected');});}
+function deselectAllCp(){document.querySelectorAll('#cp-list .cp-row').forEach((row,i)=>{document.getElementById('cp-cb-'+i).checked=false;row.classList.remove('selected');});}
+
+function confirmCourses(){
+  const nextSemNum=parseInt(document.getElementById('step3-info').dataset.semNum)||1;
+  const dept=regStudent.dept;
+  const semData=(db.courses[dept]||[]).find(s=>s.sem===nextSemNum)||(db.courses[dept]||[])[nextSemNum-1];
+  if(!semData)return;
+  const selected=semData.courses.filter((_,i)=>{const cb=document.getElementById('cp-cb-'+i);return cb&&cb.checked;});
+  if(!selected.length){toast('Please select at least one course.','danger');return;}
+  regSelectedCourses=selected;
+
+  document.getElementById('section-rows').innerHTML=selected.map(c=>{
+    const safeId='sec-'+c.code.replace(/[^a-z0-9]/gi,'_');
+    return `<div class="section-row">
+      <div class="section-course-name">
+        <span class="course-code">${c.code}</span>&nbsp; ${c.name}
+        <span style="font-size:12px;color:var(--text3);margin-left:6px">${c.cr} CR</span>
+      </div>
+      <select class="section-select" id="${safeId}">
+        ${SECTIONS.map(sec=>{
+          const cnt=countSection(regSemName,c.name,sec);
+          const full=cnt>=SECTION_LIMIT;
+          return `<option value="${sec}"${full?' disabled':''}>Section ${sec} (${cnt}/${SECTION_LIMIT})${full?' — Full':''}</option>`;
+        }).join('')}
+      </select>
+    </div>`;
+  }).join('');
+
+  document.getElementById('section-picker-container').style.display='';
+  document.getElementById('section-picker-container').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function backToCourses(){document.getElementById('section-picker-container').style.display='none';}
+function backToSemester(){document.getElementById('step3-card').style.display='none';}
+
+function resetToStep1(){
+  document.getElementById('step2-card').style.display='none';
+  document.getElementById('step3-card').style.display='none';
+  document.getElementById('student-found-info').innerHTML='';
+  document.getElementById('new-student-fields').style.display='none';
+  document.getElementById('reg-id').value='';
+  regStudent=null;regSemName='';regSelectedCourses=[];
+}
+
+function submitRegistration(){
+  if(!regSelectedCourses.length){toast('No courses selected.','danger');return;}
+  let courses=[];
+  try{
+    courses=regSelectedCourses.map(c=>{
+      const safeId='sec-'+c.code.replace(/[^a-z0-9]/gi,'_');
+      const el=document.getElementById(safeId);
+      const section=el?el.value:'A';
+      if(countSection(regSemName,c.name,section)>=SECTION_LIMIT){
+        toast(c.code+' Section '+section+' is full!','danger');throw new Error('full');
+      }
+      return{code:c.code,name:c.name,credit:c.cr,section};
+    });
+  }catch(e){return;}
+
+  if(!regStudent.semesters)regStudent.semesters=[];
+  regStudent.semesters.push({name:regSemName,courses});
+  save();
+  toast(regStudent.name+' registered for '+regSemName+'!','success');
+  document.getElementById('step2-card').style.display='none';
+  document.getElementById('step3-card').style.display='none';
+  document.getElementById('student-found-info').innerHTML=`<div class="alert alert-success">
+    ✓ <strong>${regStudent.name}</strong> successfully registered for <strong>${regSemName}</strong> with ${courses.length} course(s).
+  </div>`;
+  regStudent=null;regSemName='';regSelectedCourses=[];
+}
+
+/* ── Records ── */
+function renderRecords(query){
+  const q=(query||'').toLowerCase();
+  const list=document.getElementById('records-list');
+  const filtered=db.students.filter(s=>s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q)||s.dept.toLowerCase().includes(q));
+  if(!filtered.length){list.innerHTML='<div class="empty">No students found.</div>';return;}
+  list.innerHTML=filtered.map(s=>`
+    <div class="student-card" onclick="toggleDetail('${s.id}')">
+      <div class="avatar">${initials(s.name)}</div>
+      <div style="flex:1">
+        <div class="student-name">${s.name}</div>
+        <div class="student-meta">${s.id} · ${s.dept} · ${(s.semesters||[]).length} semester(s) completed</div>
+        <div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap">
+          ${(s.semesters||[]).map((sem,i)=>`<span class="badge ${['badge-blue','badge-teal','badge-pink'][i%3]}">${sem.name}</span>`).join('')}
+          ${!(s.semesters||[]).length?'<span class="badge badge-gray">No semesters yet</span>':''}
+        </div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteStudent('${s.id}')">Remove</button>
+    </div>
+    <div id="detail-${s.id}" style="display:none;margin-top:-8px;margin-bottom:12px">${renderDetail(s)}</div>
+  `).join('');
+}
+
+function toggleDetail(id){const el=document.getElementById('detail-'+id);el.style.display=el.style.display==='none'?'':'none';}
+
+function renderDetail(s){
+  if(!(s.semesters||[]).length) return `<div class="card" style="padding:14px"><div class="empty" style="padding:10px 0">No semesters registered.</div></div>`;
+  const totalCr=s.semesters.reduce((a,sem)=>a+(sem.courses||[]).reduce((b,c)=>b+(c.credit||0),0),0);
+  return `<div class="card" style="padding:16px 20px">
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <span class="badge badge-blue">Total Credits: ${totalCr}</span>
+      <span class="badge badge-teal">${s.semesters.length} Semester(s)</span>
+      <span class="badge badge-gray">${s.dept}</span>
+    </div>
+    ${s.semesters.map(sem=>`
+      <div class="sem-block">
+        <div class="sem-header">
+          <span>${sem.name}</span>
+          <span style="font-size:12px;color:var(--text2);font-weight:400">${sem.courses.length} courses · ${(sem.courses||[]).reduce((a,c)=>a+(c.credit||0),0)} CR</span>
+        </div>
+        <div class="sem-body">
+          ${sem.courses.map(c=>`
+            <div class="course-row">
+              <span class="course-code">${c.code||'—'}</span>
+              <span class="course-name-t">${c.name}</span>
+              <span class="badge badge-gray">§${c.section}</span>
+              <span class="credit-badge">${c.credit} CR</span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function deleteStudent(id){
+  if(!confirm('Remove this student and all records?'))return;
+  db.students=db.students.filter(s=>s.id!==id);
+  save();renderRecords('');toast('Student removed.','info');
+}
+
+/* ── Overview ── */
+function renderOverview(){
+  const ts=db.students.length;
+  const tr=db.students.reduce((a,s)=>a+(s.semesters||[]).length,0);
+  const tc=db.students.reduce((a,s)=>(s.semesters||[]).reduce((b,sem)=>b+(sem.courses||[]).length,a),0);
+  const depts=[...new Set(db.students.map(s=>s.dept))].filter(Boolean);
+  document.getElementById('stats-grid').innerHTML=`
+    <div class="stat" style="animation-delay:.04s"><div class="stat-val">${ts}</div><div class="stat-label">Students</div></div>
+    <div class="stat" style="animation-delay:.09s"><div class="stat-val">${tr}</div><div class="stat-label">Registrations</div></div>
+    <div class="stat" style="animation-delay:.14s"><div class="stat-val">${tc}</div><div class="stat-label">Enrolled Courses</div></div>
+    <div class="stat" style="animation-delay:.19s"><div class="stat-val">${depts.length}</div><div class="stat-label">Departments</div></div>
+  `;
+  const semMap={};
+  db.students.forEach(s=>(s.semesters||[]).forEach(sem=>{
+    if(!semMap[sem.name])semMap[sem.name]={count:0,courses:{}};
+    semMap[sem.name].count++;
+    (sem.courses||[]).forEach(c=>{
+      if(!semMap[sem.name].courses[c.name])semMap[sem.name].courses[c.name]={};
+      semMap[sem.name].courses[c.name][c.section]=(semMap[sem.name].courses[c.name][c.section]||0)+1;
+    });
+  }));
+  if(!Object.keys(semMap).length){document.getElementById('overview-content').innerHTML='<div class="empty">No registrations yet.</div>';return;}
+  document.getElementById('overview-content').innerHTML=Object.entries(semMap).map(([sem,data])=>`
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">
+      <div class="sem-header"><span>${sem}</span><span class="badge badge-blue">${data.count} student${data.count!==1?'s':''}</span></div>
+      <div style="padding:4px 16px 10px">
+        ${Object.entries(data.courses).map(([cname,sections])=>`
+          <div class="course-row">
+            <span class="course-name-t">${cname}</span>
+            <div style="display:flex;gap:4px;flex-wrap:wrap">
+              ${Object.entries(sections).map(([sec,cnt])=>`
+                <span class="badge ${cnt>=SECTION_LIMIT?'badge-red':'badge-gray'}">§${sec}: ${cnt}/${SECTION_LIMIT}</span>`).join('')}
+            </div>
+          </div>`).join('')||'<div style="padding:10px 0;font-size:13px;color:var(--text3)">No courses.</div>'}
+      </div>
+    </div>`).join('');
+}
+
+/* ── Course Manager ── */
+function renderCourseManager(){
+  document.getElementById('dept-list').innerHTML=Object.keys(db.courses).map(dept=>{
+    const sems=db.courses[dept];
+    const total=sems.reduce((a,s)=>a+(s.courses||[]).length,0);
+    return `<div class="dept-card">
+      <div class="dept-header" onclick="toggleDept('db-${dept}')">
+        <span><strong>${dept}</strong> — ${DEPT_NAMES[dept]||dept}
+          <span class="badge badge-gray" style="margin-left:8px">${sems.length} sems · ${total} courses</span>
+        </span>
+        <span style="font-size:12px;color:var(--text2);font-weight:400">▼ Expand</span>
+      </div>
+      <div class="dept-body" id="db-${dept}">
+        ${sems.map((semData,si)=>`
+          <div class="sem-group">
+            <div class="sem-group-title">${semData.label}</div>
+            ${(semData.courses||[]).map((c,ci)=>`
+              <div class="cer">
+                <input type="text" value="${c.code}" placeholder="Code"
+                  onchange="updateCourse('${dept}',${si},${ci},'code',this.value)"/>
+                <input type="text" value="${c.name}" placeholder="Course name"
+                  onchange="updateCourse('${dept}',${si},${ci},'name',this.value)"/>
+                <input type="number" value="${c.cr}" min="0.5" max="9" step="0.5" placeholder="CR"
+                  onchange="updateCourse('${dept}',${si},${ci},'cr',parseFloat(this.value))"/>
+                <button class="btn btn-danger btn-xs" onclick="removeCourse('${dept}',${si},${ci})">✕</button>
+              </div>`).join('')}
+            <button class="btn btn-ghost btn-sm" onclick="addCourse('${dept}',${si})" style="margin-top:4px">+ Add Course</button>
+          </div>`).join('')}
+        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="addSemester('${dept}')">+ Add Semester</button>
+          <button class="btn btn-danger btn-sm" onclick="resetDept('${dept}')">Reset to Default</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDept(id){document.getElementById(id).classList.toggle('open');}
+
+function updateCourse(dept,si,ci,field,val){
+  if(db.courses[dept]&&db.courses[dept][si]&&db.courses[dept][si].courses[ci]){
+    db.courses[dept][si].courses[ci][field]=val;save();
+  }
+}
+function removeCourse(dept,si,ci){
+  if(!confirm('Remove this course?'))return;
+  db.courses[dept][si].courses.splice(ci,1);
+  save();renderCourseManager();
+  document.getElementById('db-'+dept).classList.add('open');
+  toast('Course removed.','info');
+}
+function addCourse(dept,si){
+  db.courses[dept][si].courses.push({code:'NEW-000',name:'New Course',cr:3});
+  save();renderCourseManager();
+  document.getElementById('db-'+dept).classList.add('open');
+  toast('Course added — edit the fields.','info');
+}
+function addSemester(dept){
+  const sems=db.courses[dept];
+  const n=sems.length+1;
+  sems.push({sem:n,label:'Semester '+n,courses:[]});
+  save();renderCourseManager();
+  document.getElementById('db-'+dept).classList.add('open');
+  toast('Semester '+n+' added.','info');
+}
+function resetDept(dept){
+  if(!confirm('Reset '+dept+' to default courses? All edits will be lost.'))return;
+  db.courses[dept]=JSON.parse(JSON.stringify(DEFAULT_COURSES[dept]||[]));
+  save();renderCourseManager();
+  document.getElementById('db-'+dept).classList.add('open');
+  toast(dept+' reset to default.','success');
+}
+
+/* ── Export / Import ── */
+function exportData(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+  a.download='Registration_Data.json';a.click();
+  toast('Data exported.','success');
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const p=JSON.parse(ev.target.result);
+      if(!p.students)throw new Error();
+      db=p;if(!db.courses)db.courses=JSON.parse(JSON.stringify(DEFAULT_COURSES));
+      save();toast('Imported successfully.','success');
+    }catch{toast('Invalid file.','danger');}
+  };
+  reader.readAsText(file);e.target.value='';
+}
+
+load();
+</script>
+</body>
+</html>
